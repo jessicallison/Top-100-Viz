@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<!-- Document styling -->
+<link rel="stylesheet" href="styles.css">
+<body>
+    <div id = "svg">
+    </div>
+    <div id = "filter">
+        <b>Department:</b>
+        <select id = "drop-down">
+            <option value = "ALL">ALL</option>
+            <option value = "CHEM">CHEM</option>
+            <option value = "CS">CS</option>
+            <option value = "ENGL">ENGL</option>
+            <option value = "HTS">HTS</option>
+            <option value = "MATH">MATH</option>
+            <option value = "MGT">MGT</option>
+            <option value = "PHYS">PHYS</option>
+            <option value = "PSYC">PSYC</option>
+        </select>
+        <b>GPA:</b>
+        <input type="number" min="0" max="4" step="0.1" value="0" id="nValue">
+    </div>
+    <div id="option">
+        <input name="updateButton" 
+           type="button" 
+           value="Filter" 
+           onclick="updateData()" />
+    </div>
+    
+  <script src="d3/d3.min.js"></script>
+  <script src="library.js"></script>
+  <script>
+    /* Setting document and chart properties */
+    var margin = {top: 20, right: 20, bottom: 80, left: 40},
+        width = 960 - margin.left - margin.right,
+        height = 700 - margin.top - margin.bottom;
+      
+    /* Setting the range and axis */
+    var x = d3.scale.ordinal().rangeRoundBands([0, width], .1);
+    var y = d3.scale.linear().range([height, 0]);
+    var xAxis = d3.svg.axis().scale(x).orient("bottom");
+    var yAxis = d3.svg.axis().scale(y).orient("left").ticks(20);
+      
+    /* Creating an SVG canvas */
+    var svg = d3.select("#svg").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+      
+    /* Creating a Dropdown Menu */
+    var dropDown = d3.select("#drop-down").append("select")
+        .attr("name", "dept-list");
+    var options = dropDown.selectAll("option")
+        .data("drop-down").enter().append("option");        
+    options.text(function(d) { return d.value; })
+        .attr("value", function(d) {return d.value; });
+    
+      
+    /* Load data from file with a specific type function */
+    d3.csv("Courses.csv", function(error, data) {
+        
+        data.forEach(function(d) {
+            d.Dept = d.Department;
+            d.Course = d.Department + d["Course Number"];
+            d.GPA = +d.GPA; });
+        
+        data = data.filter(function(row) {
+            return row["GPA"] > 0 && row["GPA"] <= 4.0; });
+        
+        x.domain(data.map(function(d) { return d.Course; }));
+        y.domain([0, d3.max(data, function(d) { return d.GPA; })]);
+        
+        
+        if (error) throw error;
+        
+        svg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis)
+            .selectAll("text")
+            .style("text-anchor", "end")
+            .attr("dx", "-.8em")
+            .attr("dy", "-.55em")
+            .attr("transform", "rotate(-90)" );
+
+        svg.append("g")
+            .attr("class", "y axis")
+            .call(yAxis)
+            .append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 6)
+            .attr("dy", ".71em")
+            .style("text-anchor", "end")
+            .text("GPA");
+
+        svg.selectAll("bar")
+            .data(data)
+            .enter().append("rect")
+            .style("fill", "steelblue")
+            .attr("x", function(d) { return x(d.Course); })
+            .attr("width", x.rangeBand())
+            .attr("y", height)
+            .attr("height", 0)
+            .transition().duration(600).delay(400)
+            .attr("y", function(d) { return y(d.GPA); })
+            .attr("height", function(d) { return height - y(d.GPA); });
+        
+    });
+      
+    function updateData() {
+        var newDept = d3.select("#drop-down").property("value");
+        var newMin = d3.select("#nValue").property("value");
+        svg.selectAll("*").remove();
+        
+        
+        
+                
+        d3.csv("Courses.csv", function(error, data) {
+        data.forEach(function(d) {
+            d.Dept = d.Department;
+            d.Course = d.Department + d["Course Number"];
+            d.GPA = +d.GPA;
+            d.oldGPA = y(d.GPA)
+            d.oldStart = height - y(d.GPA);
+            d.newGPA = y(d.GPA)
+            d.newStart = height - y(d.GPA);
+            if(newDept != "ALL") {
+                if (d.Dept != newDept) {
+                    d.newGPA = height;
+                    d.newStart = 0;
+                }
+            }
+            if (d.GPA < newMin) {
+                d.newGPA = height;
+                d.newStart = 0;
+            }
+            
+            
+        });
+        
+        data = data.filter(function(row) {
+            return row["GPA"] > 0 && row["GPA"] <= 4.0;
+        });
+        
+        if (error) throw error;
+            
+            svg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis)
+            .selectAll("text")
+            .style("text-anchor", "end")
+            .attr("dx", "-.8em")
+            .attr("dy", "-.55em")
+            .attr("transform", "rotate(-90)" );
+
+
+        svg.append("g")
+            .attr("class", "y axis")
+            .call(yAxis)
+            .append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 6)
+            .attr("dy", ".71em")
+            .style("text-anchor", "end")
+            .text("GPA");
+            
+         svg.selectAll("bar")
+            .data(data)
+            .enter().append("rect")
+            .attr("x", function(d) { return x(d.Course); })
+            .attr("width", x.rangeBand())
+            .style("fill", "steelblue")
+            .attr("y", height)
+            .attr("height", 0)
+            .transition().duration(600).delay(400)
+            .attr("y", function(d) { return d.oldGPA; })
+            .attr("height", function(d) { return d.oldStart; })
+            .style("fill", "steelblue")
+            .transition().duration(1000).delay(1200)
+            .attr("y", function(d) { return d.newGPA; })
+            .attr("height", function(d) { return d.newStart; });
+
+            
+        })
+    }
+         
+        
+        
+
+  </script>
+</body>
