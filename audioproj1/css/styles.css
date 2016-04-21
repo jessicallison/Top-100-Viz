@@ -1,0 +1,33 @@
+rect.bordered {
+  stroke: #E6E6E6;
+  stroke-width:.5px;   
+}
+
+rect.highlight {
+  stroke: #737373;
+  stroke-width:1px;   
+}
+
+text.mono {
+  font-size: 9pt;
+  font-family: Consolas, courier;
+  fill: #aaa;
+}
+
+text.axis-workweek {
+  fill: #000;
+}
+
+text.axis-worktime {
+  fill: #000;
+}
+
+#heatmap {
+	width: 700px;
+  float: left;
+}
+
+.buttons {
+  float: left;
+}
+
