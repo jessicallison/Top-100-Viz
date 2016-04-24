@@ -81,76 +81,47 @@
 
       cards.select("title").text(function(d) { return d.value; });
       
-      cards.on("click", click); 
-
-        var stringTest = ""; 
-        var i = 0; 
-       
-//        var clickedGenre = [];
-//        var clickedYear = [];
-        var selected = "false";
-        var sameGenre = "true";
-
-        function click(element) {
-
-          for(j = 0; j < clickedArray.length; j++){
-            if(element == clickedArray[j]){
-              selected = "true";
-              break;
-            } else {
-              selected = "false";
-            }
+      cards.on("click", function(d) { 
+        
+          var stringTest = "",
+              index = 0,
+              selected = false,
+              init = false;
+          
+          if(clickedArray.length == 0){
+              init = true;
+          } else {
+              for(j = 0; j < clickedArray.length; j++){
+                  if(d == clickedArray[j]){
+                      index = j;
+                      selected = true;
+                    }
+                }
           }
+          
+          stringTest = d.genre+d.year;
 
-          for(a = 0; a < clickedArray.length; a++){
-
-            if(clickedArray.length == 0){
-              sameGenre = "true";
-              break;
-            }
-            // if(element.year == clickedArray[a].year){
-            //   sameGenre = "true";
-            //   break;
-            // } 
-            if((element.genre == clickedArray[a].genre) && (element.year != clickedArray[a].year)){
-              sameGenre = "true";
-              break;
-            } else {
-              sameGenre = "false";
-            }
-            if((element.year == clickedArray[a].year) && (element.genre != clickedArray[a].genre)) {
-              sameGenre = "true"; 
-              break; 
-            } else {
-              sameGenre = "false";
-            }
-          }
-
-          //console.log(selected);
-          if (selected == "false" && sameGenre == "true"){
-            //element.selected = "true";
-            console.log(element);
-            i++; 
-            //console.log("i"+i);
-            clickedArray.push(element);
-            //clickedGenre.push(element.genre);
-            //clickedYear.push(element.year);
-            stringTest = clickedArray[i-1].genre + clickedArray[i-1].year; 
-            console.log("stringTest: " + stringTest);
-
+          if (!selected){
+            clickedArray.push(d);
             d3.select("#" +stringTest)
               .attr("class","highlight")
               .style("fill", "#fde0dd");
           } else {
-            console.log("element already selected yo!")
+            d3.select("#" +stringTest)
+              .attr("class","highlight")
+              .style("fill", function(d) { return colorScale(d.value);});
+              clickedArray.splice(index, 1);
+              removeFilter(d);
           }
+        
+            if(init) {
+                initBubbles();
+            } else if (!selected) {
+                addFilter(d);
+                
+            }
 
-          console.log("the array contains: ");
-          for(o = 0; o < clickedArray.length ; o++){
-            //console.log(clickedYear[o] + clickedGenre[o] + ", ");
-          }
-
-        }
+          });
 
       cards.exit().remove();
 
@@ -183,7 +154,9 @@
   var queryButton = d3.select("#query-button")
       .append("p")
       .append("button")
-      .text("Run Query");
+      .text("Run Query")
+        .on("click", function(d) {
+            onClick();});
 
   var resetButton = d3.select("#reset-button")
     //.data(data)

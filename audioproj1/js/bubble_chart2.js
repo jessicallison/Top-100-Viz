@@ -1,21 +1,33 @@
+var width = 660,
+    height = 600;
+
 (function() {
+        
+    var svg1 = d3.select('#vis')
+        .append('svg')
+        .attr('id', "svg1")
+        .attr('width', width)
+        .attr('height', height);
+    
+})();
+
+
+var svg1 = d3.select('#svg1');
+    
 var dataname = 'data/money.csv';
-var width = 960,
-    height = 600,
-    padding = 1.5, // separation between same-color nodes
+var padding = 1.5, // separation between same-color nodes
     clusterPadding = 6, // separation between different-color nodes
-    maxRadius = 12;
+    maxRadius = 12,
+    damper = 0.00,
+    static = true,
+    bubbles = null,
+    nodes = [],
+    clusters = new Array(5),
+    clickedYear = [],
+    clickedGenre = [];
   
 var tooltip = floatingTooltip('gates_tooltip', 240);
 var center = { x: width / 2, y: height / 2 };
-
-var damper = 0.00; 
-
-var static = true;
-
-var bubbles = null;
-var nodes = [];
-var clusters = new Array(5);
 
 var force = d3.layout.force()
     .size([width, height])
@@ -25,44 +37,133 @@ var force = d3.layout.force()
 var fillColor = d3.scale.ordinal()
     .domain(['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'])
     .range(['#4080bf', '#4040bf', '#8040bf', '#bf40bf', '#bf4080', '#9cbdde', '#40bfbf', '#40bf80', '#bf4040', '#bfbf40', '#debd9c', '#000000']);
-
+    
 var radiusScale = d3.scale.pow()
     .exponent(0.5)
     .range([0.1, 20]);
 
 radiusScale.domain([0, 100]);
 
-var svg = d3.select('#vis')
-    .append('svg')
-    .attr('width', width)
-    .attr('height', height);
-
-var clickedYear = ["1990", "1991", "1992"];
-var clickedGenre = ["EDM", "Country", "Blues"];
-
-
-var genre = gen(clickedGenre);
-    
-function gen(clickedGenre) {
-    var genre = "";
-    clickedGenre.forEach(function(d) {
-        
-        genre = genre + d + ", ";
-    });
-    return genre;
-    
-};
-
-var first = true;
-
-
-
+var genre = "";
 var it = 0;
-var numit = clickedYear.length;
+var numit = 0;
+var year;
 
-var year = clickedYear[it];
+function gen(clickedGenre) {
+        var genre = "";
+        clickedGenre.forEach(function(d) {
+            genre = genre + d + ", ";
+        });
+        return genre;  
+    };
 
-if(it < (numit-1)) {
+function initBubbles() {
+    
+    clickedYear[0] = clickedArray[0].year;
+    clickedGenre[0] = clickedArray[0].genre;
+
+    genre = gen(clickedGenre);
+    
+    numit = clickedYear.length;
+    year = clickedYear[it];
+    
+    document.getElementById("yeardisplay").innerHTML = year;
+    document.getElementById("genredisplay").innerHTML = gen(clickedGenre);
+    
+    d3.csv('data/money.csv', function(error, data1) {
+        data = data1;
+        buildNodes(data, clickedGenre); 
+        force.nodes(nodes);
+        buildBubbles();  
+    });
+}
+
+function buildBubbles() {
+    bubbles = svg1.selectAll('.bubble')
+            .data(nodes, function (d) { return d.num; });
+    
+        bubbles.enter().append('circle')
+            .classed('bubble', true)
+            .attr('id', function(d) { return "a"+d.num; })
+            .attr('r', 0)
+            .attr('fill', function (d) { return fillColor(d.cluster); })
+            .attr('fill-opacity', function (d) { return d.value / 100; })
+            .attr('stroke', function (d) { return d3.rgb(fillColor(d.cluster)).darker(); })
+            .attr('stroke-width', 2)
+            .call(force.drag)
+            .on('mouseover', showDetail)
+            .on('mouseout', hideDetail);
+
+        bubbles.append("text")
+            .attr("dx", 12)
+            .attr("dy", ".35em")
+            .text(function(d) { return d.num; });
+
+        bubbles.transition()
+            .duration(2000)
+            .attr('r', function (d) { return d.radius; });
+
+        groupBubbles();
+    
+}
+
+function addFilter(element) {
+    var diff = true;
+    clickedGenre.forEach(function (d) {
+        if (element.genre == d) {
+            //handle new year of same genre animation playing
+            diff = false;
+        }
+    });
+    if(diff) {
+       if(element.year == year) {
+           clickedGenre[clickedGenre.length]=element.genre;
+           buildNodes(data, [element.genre]);
+           buildBubbles();
+        }
+    }
+    document.getElementById("genredisplay").innerHTML = gen(clickedGenre);
+}
+
+function removeFilter(element) {
+    var k = 0;
+    var max = nodes.length;
+    for (var i =0; i < max; i++) {
+        if (nodes[k].genre == element.genre) {
+            var res = String(i);
+            d3.select("#a"+i).remove();
+            nodes.splice(k, 1);
+        } else {
+            k++;
+        }
+    }
+    
+    for(var i = 0; i < clickedGenre.length; i++) {
+        if(clickedGenre[i] == element.genre) {
+            clickedGenre.splice(i, 1);
+            break;
+        }
+    }
+    document.getElementById("genredisplay").innerHTML = gen(clickedGenre);
+    
+    renumberBubbles(); 
+}
+
+function renumberBubbles() {
+    bubbles = svg1.selectAll('.bubble') .data(nodes, function (d) { return d.num; });
+    var i = 0;
+    nodes.forEach(function(d) {
+        d.num = i;
+        i++;
+    });
+    bubbles.classed('bubble', true)
+        .attr('id', function(d) { return "a"+d.num; });
+}
+    
+   
+
+
+/*if(it < (numit-1)) {
    setTimeout(function () { 
         it++;
         year = clickedYear[it];
@@ -76,7 +177,7 @@ if(it < (numit-1)) {
         colorBubbles(); 
    }, 20000);
 }
-/*if(it < (numit-1)) {
+if(it < (numit-1)) {
    setTimeout(function () { 
         it++;
         year = clickedYear[it];
@@ -94,24 +195,16 @@ if(it < (numit-1)) {
 
 
 
-function filter(d) {
-    
-    for (var i = 0; i < clickedGenre.length; i++) {
-        if (d.genre == clickedGenre[i]) {
-            return true;
-        }
-    }
-    return false;
-}
 
-document.getElementById("yeardisplay").innerHTML = year;
-document.getElementById("genredisplay").innerHTML = genre;
 
-function buildNodes (data) {
-    first = false;
+//document.getElementById("yeardisplay").innerHTML = year;
+//document.getElementById("genredisplay").innerHTML = genre;
+
+function buildNodes (data, clickedGenre) {
+    //var i = nodes.length;
     data.forEach(function(d) {
         if(d.year == year) {
-        if(filter(d)) {
+        if(filter(d, clickedGenre)) {
             var e = {
                 id : d.id,
                 radius : radiusScale(+d.hotness),
@@ -128,7 +221,7 @@ function buildNodes (data) {
                 prev : false
             };
             data.forEach(function(h) {
-                if(h.year == (year+2) && h.track_title == e.name) {
+                if(h.year == (year+1) && h.track_title == e.name) {
                     e.next = true;
                 }
             });
@@ -145,6 +238,17 @@ function buildNodes (data) {
         i++;
     });
 }
+
+function filter(d, clickedGenre) {
+    
+    for (var i = 0; i < clickedGenre.length; i++) {
+        if (d.genre == clickedGenre[i]) {
+            return true;
+        }
+    }
+    return false;
+}
+
 var data;
 
 function updateNodes (data) {
@@ -153,7 +257,7 @@ function updateNodes (data) {
     clusters  = new Array(5);
     data.forEach(function(d) {
         if(d.year == year) {
-            if(filter(d)){
+            if(filter(d, clickedGenre)){
         //if(d.year == year && d.genre == genre) {
             var e = {
                 id : d.id,
@@ -241,9 +345,9 @@ function updateNodes (data) {
 
 function changeBubbles() {
     document.getElementById("yeardisplay").innerHTML = year;
-    document.getElementById("genredisplay").innerHTML = genre;
+    document.getElementById("genredisplay").innerHTML = gen(clickedGenre);
     
-    bubbles = svg.selectAll('.bubble')
+    bubbles = svg1.selectAll('.bubble')
         .data(nodes, function (d) { return d.num; });
     
     var k = 0;
@@ -290,46 +394,7 @@ function changeBubbles() {
 }, 2000); 
 }
                    
-d3.csv('data/money.csv', function(error, data1) {
-    
-    bubbles = null;
-    nodes = [];
-    clusters = new Array(5);
-    
-    if(clickedYear.length > 0) {
-        static = false;
-    }
-    
-    data = data1;
-    buildNodes(data);   
-    force.nodes(nodes);
-    
-    bubbles = svg.selectAll('.bubble')
-        .data(nodes, function (d) { return d.num; });
-    
-     bubbles.enter().append('circle')
-      .classed('bubble', true)
-     .attr('id', function(d) { return "a"+d.num; })
-      .attr('r', 0)
-      .attr('fill', function (d) { return fillColor(d.cluster); })
-        .attr('fill-opacity', function (d) { return d.value / 100; })
-      .attr('stroke', function (d) { return d3.rgb(fillColor(d.cluster)).darker(); })
-      .attr('stroke-width', 2)
-      .call(force.drag)
-      .on('mouseover', showDetail)
-      .on('mouseout', hideDetail);
-      
-    bubbles.append("text")
-      .attr("dx", 12)
-      .attr("dy", ".35em")
-      .text(function(d) { return d.num; });
 
-    bubbles.transition()
-      .duration(2000)
-      .attr('r', function (d) { return d.radius; });
-      
-    groupBubbles();
-});
 
 setupButtons();
 
@@ -365,9 +430,6 @@ function groupBubbles() {
 }
 
 function groupBubbles1() {
-    
-    
-    
     force.on('tick', function (e) {
         bubbles.each(cluster(10 * e.alpha * e.alpha))
             .each(collide(.1))
@@ -446,7 +508,7 @@ function hideDetail(d) {
     tooltip.hideTooltip();
 }
 
-svg.toggleDisplay = function (displayName) {
+svg1.toggleDisplay = function (displayName) {
     if (!static) {
         year++;
         colorBubbles();
@@ -477,7 +539,7 @@ function setupButtons() {
 
       // Toggle the bubble chart based on
       // the currently clicked button.
-      svg.toggleDisplay(buttonId);
+      svg1.toggleDisplay(buttonId);
     });
 }
 
@@ -494,7 +556,13 @@ function addCommas(nStr) {
   return x1 + x2;
 }
 
+    
 
 
 
-})();
+
+
+
+
+
+
