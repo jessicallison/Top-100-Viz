@@ -1,6 +1,10 @@
 var width = 660,
     height = 600;
 
+var static = true;
+var numit = 0;
+var clickedYear = [];
+
 (function() {
         
     var svg1 = d3.select('#vis')
@@ -19,11 +23,10 @@ var padding = 1.5, // separation between same-color nodes
     clusterPadding = 6, // separation between different-color nodes
     maxRadius = 12,
     damper = 0.00,
-    static = true,
+    //static = true,
     bubbles = null,
     nodes = [],
     clusters = new Array(5),
-    clickedYear = [],
     clickedGenre = [];
   
 var tooltip = floatingTooltip('gates_tooltip', 240);
@@ -34,9 +37,29 @@ var force = d3.layout.force()
     .charge(0)
     .gravity(0.02);
 
-var fillColor = d3.scale.ordinal()
-    .domain(['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'])
-    .range(['#4080bf', '#4040bf', '#8040bf', '#bf40bf', '#bf4080', '#9cbdde', '#40bfbf', '#40bf80', '#bf4040', '#bfbf40', '#debd9c', '#000000']);
+function fillColor1(cluster) {
+    if (cluster == 1) {
+        return '#F20D0D';
+    } else if (cluster == 2) {
+         return '#FF6600';
+    } else if (cluster == 3) {
+         return '#FFCC00';
+    } else if (cluster == 4) {
+         return '#00CCFF';
+    } else if (cluster == 5) {
+         return '#004CFF';
+    } else if (cluster == 6) {
+         return '#9900FF';
+    } else if (cluster == 7) {
+         return '#00FFE6';
+    } else if (cluster == 8) {
+         return '#00FF33';
+    } else if (cluster == 9) {
+         return '#E500FF';
+    } else if (cluster == 10) {
+         return '#FF0099';
+    }
+}
     
 var radiusScale = d3.scale.pow()
     .exponent(0.5)
@@ -46,16 +69,16 @@ radiusScale.domain([0, 100]);
 
 var genre = "";
 var it = 0;
-var numit = 0;
+
 var year;
 
 function gen(clickedGenre) {
-        var genre = "";
-        clickedGenre.forEach(function(d) {
-            genre = genre + d + ", ";
-        });
-        return genre;  
-    };
+    var genre = "";
+    clickedGenre.forEach(function(d) {
+        genre = genre + d + ", ";
+    });
+    return genre;  
+};
 
 function initBubbles() {
     
@@ -86,9 +109,9 @@ function buildBubbles() {
             .classed('bubble', true)
             .attr('id', function(d) { return "a"+d.num; })
             .attr('r', 0)
-            .attr('fill', function (d) { return fillColor(d.cluster); })
+            .attr('fill', function (d) { return fillColor1(d.cluster); })
             .attr('fill-opacity', function (d) { return d.value / 100; })
-            .attr('stroke', function (d) { return d3.rgb(fillColor(d.cluster)).darker(); })
+            .attr('stroke', function (d) { return d3.rgb(fillColor1(d.cluster)).darker(); })
             .attr('stroke-width', 2)
             .call(force.drag)
             .on('mouseover', showDetail)
@@ -111,8 +134,12 @@ function addFilter(element) {
     var diff = true;
     clickedGenre.forEach(function (d) {
         if (element.genre == d) {
-            //handle new year of same genre animation playing
-            diff = false;
+            //console.log("new yaer");
+            static = false;
+            numit = clickedYear.length;
+            clickedYear[numit]=element.year;
+            
+            diff = false;  
         }
     });
     if(diff) {
@@ -162,35 +189,59 @@ function renumberBubbles() {
     
    
 
-
-/*if(it < (numit-1)) {
+function checkAnim() {
+    d3.select("#query-button")
+                    .text("Playing");
+   // console.log("check");
+    numit = clickedYear.length;
+    //console.log(numit)
+   // console.log(it);
+if(it < (numit-1)) {
+    //console.log("once");
+    
    setTimeout(function () { 
-        it++;
+       it++;
         year = clickedYear[it];
+       document.getElementById("yeardisplay").innerHTML = year;
         colorBubbles(); 
    }, 8000);
 }
-if(it < (numit-1)) {
+    //console.log(it);
+if(it+1 < (numit-1)) {
+    //console.log("twice");
+
    setTimeout(function () { 
-        it++;
+            it++;
         year = clickedYear[it];
+       document.getElementById("yeardisplay").innerHTML = year;
         colorBubbles(); 
    }, 20000);
 }
-if(it < (numit-1)) {
+if(it+2 < (numit-1)) {
+    //console.log("thrice");
+
    setTimeout(function () { 
-        it++;
+           it++;
         year = clickedYear[it];
+       document.getElementById("yeardisplay").innerHTML = year;
         colorBubbles(); 
    }, 40000);
 }
-if(it < (numit-1)) {
+if(it+3 < (numit-1)) {
+   // console.log("fourth");
    setTimeout(function () { 
         it++;
         year = clickedYear[it];
         colorBubbles(); 
    }, 60000);
-}*/
+}
+    setTimeout(function () { 
+        static = true;
+    removeAnim();
+    //console.log("remove");
+   }, (numit)*10000);
+    
+}
    
 
 
@@ -242,6 +293,14 @@ function buildNodes (data, clickedGenre) {
 function filter(d, clickedGenre) {
     
     for (var i = 0; i < clickedGenre.length; i++) {
+        if(clickedGenre[i] == "Other") {
+            console.log("other");
+            //console.log(d.genre);
+            if(d.genre == "Christian" | d.genre == "Folk" | d.genre == "Blues" | d.genre == "Jazz") {
+                console.log("true");
+                return true;
+            }
+        }
         if (d.genre == clickedGenre[i]) {
             return true;
         }
@@ -375,13 +434,13 @@ function changeBubbles() {
     .attr('r', function(d) { return d.radius; })
         .attr('stroke', function (d) { 
             if (d.year == year) {
-                return d3.rgb(fillColor(d.cluster)).darker(); 
+                return d3.rgb(fillColor1(d.cluster)).darker(); 
             } else {
                 return 'white';
             }})
         .attr('fill', function (d) { 
             if (d.year == year) {
-                return fillColor(d.cluster); 
+                return fillColor1(d.cluster); 
             } else {
                 return 'white';
             }})
@@ -404,10 +463,10 @@ function colorBubbles(){
     bubbles.transition()
         .duration(2000)
         .attr('fill', function(d) {
-            if (d.next) { return fillColor(d.cluster); }
+            if (d.next) { return fillColor1(d.cluster); }
             else { return 'white'; } })
         .attr('stroke', function(d) {
-            if (d.next) { return d3.rgb(fillColor(d.cluster)).darker(); }
+            if (d.next) { return d3.rgb(fillColor1(d.cluster)).darker(); }
             else { return 'gray'; } })
         .attr('stroke-width', function(d) {
             if (d.next) { return 8 }
@@ -504,7 +563,7 @@ function showDetail(d) {
 
 function hideDetail(d) {
     d3.select(this)
-        .attr('stroke', d3.rgb(fillColor(d.cluster)).darker());
+        .attr('stroke', d3.rgb(fillColor1(d.cluster)).darker());
     tooltip.hideTooltip();
 }
 
@@ -522,24 +581,26 @@ function setupButtons() {
   d3.select('#toolbar')
     .selectAll('.button')
     .on('click', function () {
-      // Remove active class from all buttons
-      d3.selectAll('.button').classed('active', false);
-      // Find the button just clicked
       var button = d3.select(this);
-
-      // Set it as the active button
-      button.classed('active', true);
-
-      // Get the id of the button
       var buttonId = button.attr('id');
-      
       if (buttonId == 'year') {
-          static = false;
+          button.text("Playing");
+          playing = true;
+          setTimeout(function () { 
+            year++;
+              //clickedYear[clickedYear.length]=year;
+            colorBubbles(); 
+            button.text("Next Year");
+            }, 8000);
+      } else if (buttonId == 'year1') {
+          button.text("Playing");
+          playing = true;
+          setTimeout(function () { 
+            year--;
+            colorBubbles(); 
+            button.text("Previous Year");
+            }, 8000); 
       }
-
-      // Toggle the bubble chart based on
-      // the currently clicked button.
-      svg1.toggleDisplay(buttonId);
     });
 }
 

@@ -3,35 +3,49 @@
       height = 1300 - margin.top - margin.bottom,
       gridSize = (width / 16),
       legendElementWidth = gridSize + 5,
-      buckets = 8,
+      buckets = 7,
+      playing = false,
      
-      colors0 = ['#e6e6e6','#cccccc','#b3b3b3','#999999','#808080','#666666','#4d4d4d','#333333','#1a1a1a'],
+      colors0 = ['#e6e6e6','#cccccc','#b3b3b3','#999999','#808080','#666666','#4d4d4d'],
       
-      colors1 = ['#d9e6f2','#b3cce6','#8cb3d9','#6699cc','#4080bf','#336699','#264d73','#19334d','#0d1a26'],
-      colors2 = ['#f2d9f2','#e6b3e6','#d98cd9','#cc66cc','#bf40bf','#993399','#732673','#4d194d','#260d26'],
-      colors3 = ['#f2d9e6','#e6b3cc','#d98cb3','#cc6699','#bf4080','#993366','#73264d','#4d1933','#260d1a'],
-      colors4 = ['#d9f2f2','#b3e6e6','#8cd9d9','#66cccc','#40bfbf','#339999','#267373','#194d4d','#0d2626'],
-      colors5 = ['#f2d9d9','#e6b3b3','#d98c8c','#cc6666','#bf4040','#993333','#732626','#4d1919','#260d0d'],
-      colors6 = ['#f2f2d9','#e6e6b3','#d9d98c','#cccc66','#bfbf40','#999933','#737326','#4d4d19','#26260d'],
-      colors7 = ['#d9d9f2','#b3b3e6','#8c8cd9','#6666cc','#4040bf','#333399','#262673','#19194d','#0d0d26'],
-      colors8 = ['#e6d9f2','#ccb3e6','#b38cd9','#9966cc','#8040bf','#663399','#4d2673','#33194d','#1a0d26'],
+      colors1 = ['#FCCFCF', '#FA9E9E', '#F76E6E', '#F53D3D', '#F20D0D', '#C20A0A'],
+      colors2 = ['#FFE0CC', '#FFC299', '#FFA366', '#FF8533', '#FF6600', '#CC5200'],
+      colors3 = ['#FFF5CC', '#FFEB99', '#FFE066', '#FFD633', '#FFCC00', '#CCA300'],
+      colors8 = ['#CCFFD6', '#99FFAD', '#66FF85', '#33FF5C', '#00FF33', '#00CC29'],
+      colors7 = ['#CCFFFA', '#99FFF5', '#66FFF0', '#33FFEB', '#00FFE6', '#00CCB8'],
+      colors4 = ['#CCF5FF', '#99EBFF', '#66E0FF', '#33D6FF', '#00CCFF', '#00A3CC'],
       
+      colors5 = ['#CCDBFF', '#99B8FF', '#6694FF', '#3370FF', '#004CFF', '#003DCC'],
+      colors6 = ['#EBCCFF', '#D699FF', '#C266FF', '#AD33FF', '#9900FF', '#7A00CC'],
+      colors9 = ['#FACCFF', '#F599FF', '#F066FF', '#EB33FF', '#E500FF', '#B800CC'],           
+      colors10 = ['#FFCCEB', '#FF99D6', '#FF66C2', '#FF33AD', '#FF0099', '#CC007A'],
       
-      
-      
-      colors10 = ['#d9e6f2','#b3cce6','#8cb3d9','#6699cc','#4080bf','#336699','#264d73','#19334d','#0d1a26'],
-      
-      colors9 = ['#d9f2e6','#b3e6cc','#8cd9b3','#66cc99','#40bf80','#339966','#26734d','#194d33','#0d261a'],
-      
-      
-    
-
       years = ["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000"];
-      genres = ["Alternative", "Country",  "EDM", "HipHop", "Pop", "PopRock", "RnB", "Rock", "Blues", "Reggae", "Christian", "Jazz", "Folk"];
+      genres = ["Alternative", "Country",  "EDM", "HipHop", "Pop", "PopRock", "RnB", "Rock", "Reggae", "Other"];
 
-var fillColor = d3.scale.ordinal()
-    .domain(genres)
-    .range(['#4080bf', '#4040bf', '#8040bf', '#bf40bf', '#bf4080', '#9cbdde', '#40bfbf', '#40bf80', '#bf4040', '#bfbf40','#000000', '#000000', '#000000']);
+function fillColor(cluster) {
+    if (cluster == 1) {
+        return '#F20D0D';
+    } else if (cluster == 2) {
+         return '#FF6600';
+    } else if (cluster == 3) {
+         return '#FFCC00';
+    } else if (cluster == 4) {
+         return '#00CCFF';
+    } else if (cluster == 5) {
+         return '#004CFF';
+    } else if (cluster == 6) {
+         return '#9900FF';
+    } else if (cluster == 7) {
+         return '#00FFE6';
+    } else if (cluster == 8) {
+         return '#00FF33';
+    } else if (cluster == 9) {
+         return '#E500FF';
+    } else if (cluster == 10) {
+         return '#FF0099';
+    }
+}
 
       //datasets = ["data.csv", "data2.csv"];
 
@@ -95,14 +109,14 @@ var fillColor = d3.scale.ordinal()
           } else if (e["genre order"] == 10) {
                   colors = colors10;
           }
-          if(e.value >= 0) {color = colors[0];}
-          if(e.value >= 2) {color = colors[1];}
-          if(e.value >= 4) {color = colors[2];}
-          if(e.value >= 7) {color = colors[3];}
-          if(e.value >= 11) {color = colors[4];}
-          if(e.value >= 18) {color = colors[5];}
-          if(e.value >= 25) {color = colors[6];}
-          if(e.value >= 31) {color = colors[7];}
+          if(e.value == 0) {color = colors0[0];}
+          if(e.value > 0) {color = colors[0];}
+          if(e.value >= 5) {color = colors[1];}
+          if(e.value >= 10) {color = colors[2];}
+          if(e.value >= 15) {color = colors[3];}
+          if(e.value >= 20) {color = colors[4];}
+          if(e.value >= 25) {color = colors[5];}
+
           
           return color;
           }
@@ -137,7 +151,7 @@ var fillColor = d3.scale.ordinal()
       cards.select("title").text(function(d) { return d.value; });
       
       cards.on("click", function(d) { 
-        
+          
           var stringTest = "",
               index = 0,
               selected = false,
@@ -158,6 +172,10 @@ var fillColor = d3.scale.ordinal()
           
           var op =  d3.select("#" +stringTest)
               .attr("opacity");
+          
+          console.log(playing);
+          
+          if(!playing) {
           
           if (init | op == 0.9) {
           
@@ -183,12 +201,56 @@ var fillColor = d3.scale.ordinal()
           }   else if (!selected) {
             addFilter(d);
             
-           }
+            }
+            
+              if(static == false) {
+                  if (clickedArray.length ==2) {
+                      d3.select("#query-button")
+                        .append("p")
+                        .append("button")
+                        .text("Play Animation")
+                        .style("opacity", 1)
+                        .on("click", function(d) {
+                          playing = true;
+                          console.log(playing);
+                            numit = clickedYear.length;
+                            checkAnim();
+                        });
+                      d3.select("#year")
+                        .style("opacity", 0);
+                      d3.select("#year1")
+                        .style("opacity", 0);
+                      
+                  } else {
+                      d3.select("#query-button")
+                      .style("opacity", 1)
+                      .text("").append("p")
+                    .append("button")
+                    .text("Play Animation")
+                    .style("opacity", 1)
+                    .on("click", function(d) {
+                          playing = true;
+                          console.log(playing);
+                       numit = clickedYear.length;
+                       checkAnim();
+                    });
+                      d3.select("#year")
+                        .style("opacity", 0);
+                      d3.select("#year1")
+                        .style("opacity", 0);
+                      
+                      
+                                  
+                //console.log(numit);
+                //console.log("button");
+              }
+              }
           
           updateOpacity();
 
           }
           
+          }
         });
         
         
@@ -197,7 +259,7 @@ var fillColor = d3.scale.ordinal()
         
         function updateOpacity() {
             cards.attr("opacity", function(d) {
-            console.log('j');
+            //console.log('j');
             if(clickedArray.length == 0 | d.opacity == 1) {
                 return 1;
             } else {
@@ -220,7 +282,8 @@ var fillColor = d3.scale.ordinal()
 
 
      var legend = svg.selectAll(".legend")
-          .data([0].concat(colorScale1.quantiles()), function(d) { return d; });
+          .data([0].concat(1, 5, 10, 15, 20, 25));
+              //colorScale1.quantiles()), function(d) { return d; });
 
       legend.enter().append("g")
           .attr("class", "legend");
@@ -228,7 +291,7 @@ var fillColor = d3.scale.ordinal()
       legend.append("rect")
         //.attr("x", function(d) { return (d["year order"] - 1) * (gridSize-10); })
         .attr("x", function(d, i) { return (gridSize-10) * i; })
-        .attr("y", gridSize * 13 + 3*gridSize/4)
+        .attr("y", gridSize * 11 + 3*gridSize/4)
         .attr("rx", 30)
         .attr("ry", 30)
         .attr("width", gridSize)
@@ -239,20 +302,23 @@ var fillColor = d3.scale.ordinal()
         .attr("class", "mono")
         .text(function(d) { return "≥ " + Math.round(d); })
         .attr("x", function(d, i) { return (gridSize-8) * i + 5; })
-        .attr("y", gridSize * 15 + 5 );
+        .attr("y", gridSize * 13 + 5 );
 
       legend.exit().remove();
 
     });  
 
+function removeAnim() {
+    playing  = false;
+    d3.select("#query-button")
+                    .style("opacity", 0);
+    d3.select("#year")
+                        .style("opacity", 1);
+                      d3.select("#year1")
+                        .style("opacity", 1);
+}
 
-
-  var queryButton = d3.select("#query-button")
-      .append("p")
-      .append("button")
-      .text("Run Query")
-        .on("click", function(d) {
-            onClick();});
+  
 
   var resetButton = d3.select("#reset-button")
     //.data(data)

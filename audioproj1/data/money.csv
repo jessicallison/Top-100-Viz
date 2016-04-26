@@ -77,12 +77,12 @@ Wonderful,54,Everclear,47,Alternative,1,2000
 Take A Picture,58,Filter,43,Alternative,1,2000
 Otherside,59,Red Hot Chili Peppers,42,Alternative,1,2000
 Broadway,84,Goo Goo Dolls,17,Alternative,1,2000
-Black Velvet,18,Alannah Myles,83,Blues,9,1990
-Run-Around,14,Blues Traveler,87,Blues,9,1995
-Everything Changes,79,Kathy Troccoli,22,Christian,11,1992
-That’s What Love Is For,91,Amy Grant,10,Christian,11,1992
-I Will Remember You,96,Amy Grant,5,Christian,11,1992
-I Need You,44,LeAnn Rimes,57,Christian,11,2000
+Black Velvet,18,Alannah Myles,83,Blues,10,1990
+Run-Around,14,Blues Traveler,87,Blues,10,1995
+Everything Changes,79,Kathy Troccoli,22,Christian,10,1992
+That’s What Love Is For,91,Amy Grant,10,Christian,10,1992
+I Will Remember You,96,Amy Grant,5,Christian,10,1992
+I Need You,44,LeAnn Rimes,57,Christian,10,2000
 Achy Breaky Heart,15,Billy Ray Cyrus,86,Country,2,1992
 When She Cries,76,Restless Heart,25,Country,2,1993
 Don’t Take The Girl,87,Tim McGraw,14,Country,2,1994
@@ -153,12 +153,12 @@ Turn The Beat Around,87,Gloria Estefan,14,EDM,3,1995
 I’ll Stand By You,95,Pretenders,6,EDM,3,1995
 Macarena (Bayside Boys Mix),1,Los Del Rio,100,EDM,3,1996
 Be My Lover,23,La Bouche,78,EDM,3,1996
-Sweet Dreams,37,La Bouche,64,EDM,4,1996
 Children,65,Robert Miles,36,EDM,3,1996
 This Is Your Night,82,Amber,19,EDM,3,1996
 Set U Free,85,Planet Soul,16,EDM,3,1996
 Beautiful Life,94,Ace Of Base,7,EDM,3,1996
 Macarena,98,Los Del Rio,3,EDM,3,1996
+Sweet Dreams,37,La Bouche,64,EDM,3,1996
 Ooh Aah… Just A Little Bit,41,Gina G,60,EDM,3,1997
 Macarena (Bayside Boys Mix),82,Los Del Rio,19,EDM,3,1997
 One More Time,90,Real McCoy,11,EDM,3,1997
@@ -168,7 +168,7 @@ Together Again,6,Janet,95,EDM,3,1998
 It Feels So Good,34,Sonique,67,EDM,3,2000
 Blue (Da Ba Dee),49,iffel 65,52,EDM,3,2000
 Better Off Alone,88,Alice Deejay,13,EDM,3,2000
-The Mummers’ Dance,83,Loreena McKennitt,18,Folk,13,1998
+The Mummers’ Dance,83,Loreena McKennitt,18,Folk,10,1998
 Poison,4,Bell Biv Devoe,97,HipHop,4,1990
 Do Me!,11,Bell Biv Devoe,90,HipHop,4,1990
 Pump Up The Jam,13,Technotronic,88,HipHop,4,1990
@@ -348,7 +348,7 @@ Forget About Dre,73,Dr. Dre feat. Eminem,28,HipHop,4,2000
 The Next Episode,76,Dr. Dre feat. Snoop Dogg,25,HipHop,4,2000
 What’chu Like,85,Da Brat feat. Tyrese,16,HipHop,4,2000
 Bounce With Me,94,Lil Bow Wow feat. Xscape,7,HipHop,4,2000
-Forever In Love,73,Kenny G,28,Jazz,12,1993
+Forever In Love,73,Kenny G,28,Jazz,10,1993
 Nothing Compares 2 U,3,Sinead O’Connor,98,Pop,5,1990
 Vogue,5,Madonna,96,Pop,5,1990
 How Am I Supposed To Live Without You,12,Michael Bolton,89,Pop,5,1990
@@ -634,6 +634,16 @@ She’s So High,51,Tal Bachman,50,PopRock,6,1999
 Hands,54,Jewel,47,PopRock,6,1999
 Then The Morning Comes,48,Smash Mouth,53,PopRock,6,2000
 Desert Rose,50,Sting feat. Cheb Mami,51,PopRock,6,2000
+The Way You Do The Things You Do,71,UB40,30,Reggae,9,1991
+Here I Am (Come And Take Me),72,UB40,29,Reggae,9,1991
+Can’t Help Falling In Love,3,UB40,98,Reggae,9,1993
+Informer,10,Snow,91,Reggae,9,1993
+Bad Boys,69,Inner Circle,32,Reggae,9,1993
+Sweat (A La La La La Long),77,Inner Circle,24,Reggae,9,1993
+I Can See Clearly Now,66,Jimmy Cliff,35,Reggae,9,1994
+Boombastic / In The Summertime,18,Shaggy,83,Reggae,9,1995
+Shy Guy,43,Diana King,58,Reggae,9,1995
+That Girl,90,Maxi Priest feat. Shaggy,11,Reggae,9,1996
 Vision Of Love,6,Mariah Carey,95,RnB,7,1990
 Hold On,8,En Vogue,93,RnB,7,1990
 Escapade,15,Janet Jackson,86,RnB,7,1990
@@ -961,16 +971,6 @@ I Like It,91,Sammie,10,RnB,7,2000
 I Don’t Wanna,96,Aaliyah,5,RnB,7,2000
 Independent Women Part I,97,Destiny’s Child,4,RnB,7,2000
 Shackles (Praise You),100,Mary Mary,1,RnB,7,2000
-The Way You Do The Things You Do,71,UB40,30,Reggae,10,1991
-Here I Am (Come And Take Me),72,UB40,29,Reggae,10,1991
-Can’t Help Falling In Love,3,UB40,98,Reggae,10,1993
-Informer,10,Snow,91,Reggae,10,1993
-Bad Boys,69,Inner Circle,32,Reggae,10,1993
-Sweat (A La La La La Long),77,Inner Circle,24,Reggae,10,1993
-I Can See Clearly Now,66,Jimmy Cliff,35,Reggae,10,1994
-Boombastic / In The Summertime,18,Shaggy,83,Reggae,10,1995
-Shy Guy,43,Diana King,58,Reggae,10,1995
-That Girl,90,Maxi Priest feat. Shaggy,11,Reggae,10,1996
 Another Day In Paradise,7,Phil Collins,94,Rock,8,1990
 Cradle Of Love,9,Billy Idol,92,Rock,8,1990
 Blaze Of Glory,10,Jon Bon Jovi,91,Rock,8,1990
@@ -1070,6 +1070,7 @@ Carnival,60,Natalie Merchant,41,Rock,8,1995
 You Don’t Know How It Feels,61,Tom Petty,40,Rock,8,1995
 Like The Way I Do-If I Wanted To,90,Melissa Etheridge,11,Rock,8,1995
 Can’t Stop Lovin’ You,100,Van Halen,1,Rock,8,1995
+If It Makes You Happy,75,Sheryl Crow,26,Rock,8,1996
 Give Me One Reason,6,Tracy Chapman,95,Rock,8,1996
 Change The World,19,Eric Clapton,82,Rock,8,1996
 Who Will Save Your Soul,25,Jewel,76,Rock,8,1996
@@ -1077,7 +1078,6 @@ Hook,60,Blues Traveler,41,Rock,8,1996
 Theme From Mission: Impossible,66,Adam Clayton and Larry Mullen,35,Rock,8,1996
 Just A Girl,68,No Doubt,33,Rock,8,1996
 Key West Intermezzo (I Saw You First),71,John Mellencamp,30,Rock,8,1996
-If It Makes You Happy,75,Sheryl Crow,26,Rock,7,1996
 I Want To Come Over,79,Melissa Etheridge,22,Rock,8,1996
 Until It Sleeps,92,Metallica,9,Rock,8,1996
 Candle In The Wind 1997,1,Elton John,100,Rock,8,1997
