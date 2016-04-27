@@ -1,0 +1,50 @@
+<!-- 
+CS4460 SPRING 2016 Audio Project
+PROF BASOLE
+AUTHORS: 
+JESSICA ALLISON
+FNU RICHARD
+BRYAN KOO--> 
+
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>CS4460 Project</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <script src="http://d3js.org/d3.v3.js"></script>
+  <link href="css/bootstrap.min.css" rel="stylesheet"></head>
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/bubble_chart.css">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <h1>Billboard Top 100 Genre Popularity</h1>
+    
+  <h2 id = "genredisplay"></h2>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div id="heatmap"></div>
+    </div>
+    <div class="col-md-6">
+      <h2 id = "yeardisplay"></h2>
+      <div id="vis"></div>
+    </div>
+  </div>
+
+  <div id="heatmap"></div>
+  <button type="button" id="all" class="btn btn-default btn" onClick="allBubbles()">Select All</button>  
+  <button type="button" id="reset" class="btn btn-default btn" onClick="window.location.reload();">Reset</button>
+  <button type="button" id="query-button" class="btn btn-default btn">Play</button>
+  <div id="toolbar">
+      <a href="#" id="year" class="button">Next Year</a>
+      <a href="#" id="year1" class="button">Previous Year</a> 
+  </div>
+  <script src="js/tooltip.js"></script>
+  <script src="js/bubble_chart2.js"></script>
+  <script src="js/heatmap.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="js/bootstrap.min.js"></script></body>
+</body>
+</html>

@@ -1,0 +1,76 @@
+rect.bordered {
+  stroke: #E6E6E6;
+  stroke-width:.5px;   
+}
+
+rect.highlight {
+  stroke: #737373;
+  stroke-width:1px;   
+}
+
+text.mono {
+  font-size: 12pt;
+  font-family: Consolas, courier;
+  fill: #aaa;
+}
+
+text.axis-workweek {
+  fill: #000;
+}
+
+text.axis-worktime {
+  fill: #000;
+}
+
+#heatmap {
+	width: 800px;
+  float: left;
+}
+
+h1 {
+  text-align: center;
+  font-size: 30px;
+  margin-top: 20px;
+}
+
+#reset {
+  position: absolute;
+  left: 280px;
+  top: 775px;
+}
+
+
+#all {
+  position: absolute;
+  left: 475px;
+  top: 775px;
+}
+
+
+.btn-lg {
+  font-size: 22px;
+}
+
+#query-button {
+  position: absolute;
+  left: 385px;
+  top: 775px;
+}
+
+#yeardisplay {
+  text-align: center;
+}
+
+
+#year1 {
+  position: absolute;
+  top: 775px;
+  left: 875px;
+}
+#year {
+  position: absolute;
+  top: 775px;
+  left: 1050px;
+}
+
+
